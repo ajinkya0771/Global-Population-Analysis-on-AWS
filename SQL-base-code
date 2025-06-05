@@ -1,0 +1,39 @@
+##Query 1:
+SELECT 
+  "Country Name",
+  COUNT(DISTINCT Year) AS Years_Recorded,
+  MIN(Year) AS First_Year,
+  MAX(Year) AS Last_Year,
+  MIN(Value) AS Min_Population,
+  MAX(Value) AS Max_Population,
+  ROUND(AVG(Value)) AS Avg_Population
+FROM 
+  population_cleaned
+GROUP BY 
+  "Country Name"
+ORDER BY 
+  Avg_Population DESC
+LIMIT 10;
+
+
+##Query 2:
+SELECT "Country Name", Value
+FROM population_cleaned
+WHERE Year = 2021
+ORDER BY Value DESC
+LIMIT 5;
+
+##Query 3:
+SELECT Year, Value
+FROM population_cleaned
+WHERE "Country Name" = 'India'
+ORDER BY Year;
+
+##Query 4:
+SELECT Year, Value
+FROM population_cleaned
+WHERE "Country Name" = 'India'
+ORDER BY Year;
+
+##Query 5:
+population_cleaned SELECT * FROM "AwsDataCatalog"."population_db"."population_cleaned" limit 10;
