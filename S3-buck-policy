@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "QuickSightAccess",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "quicksight.amazonaws.com"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::myworlddatapipelinebucket",## According to your S3 bucket
+                "arn:aws:s3:::myworlddatapipelinebucket/*"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "aws:SourceAccount": "559050203318" ## According to your account ID
+                }
+            }
+        }
+    ]
+}
