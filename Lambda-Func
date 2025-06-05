@@ -1,0 +1,43 @@
+import boto3
+import csv
+import io
+
+def lambda_handler(event, context):
+    s3 = boto3.client('s3')
+    
+    # Replace with your actual bucket name
+    bucket_name = 'myworlddatapipelinebucket'
+    input_key = 'raw/population.csv'
+    output_key = 'processed/population_cleaned.csv'
+    
+    # Get the file from S3
+    response = s3.get_object(Bucket=bucket_name, Key=input_key)
+    lines = response['Body'].read().decode('utf-8').splitlines()
+    
+    # Read CSV content
+    reader = csv.DictReader(lines)
+    
+    # Clean and filter data
+    cleaned_rows = []
+    for row in reader:
+        if row['Value'].isdigit() and int(row['Year']) >= 2000:
+            cleaned_rows.append({
+                'Country Name': row['Country Name'],
+                'Country Code': row['Country Code'],
+                'Year': row['Year'],
+                'Value': row['Value']
+            })
+    
+    # Write cleaned data to a new CSV
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=['Country Name', 'Country Code', 'Year', 'Value'])
+    writer.writeheader()
+    writer.writerows(cleaned_rows)
+    
+    # Upload to S3
+    s3.put_object(Bucket=bucket_name, Key=output_key, Body=output.getvalue().encode('utf-8'))
+    
+    return {
+        'statusCode': 200,
+        'body': f"Successfully processed and uploaded to {output_key}"
+    }
